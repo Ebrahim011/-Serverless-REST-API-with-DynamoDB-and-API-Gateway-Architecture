@@ -1,16 +1,16 @@
-# Project 3: Serverless REST API with DynamoDB and API Gateway
+# Project 3: Serverless Web Application with REST API, DynamoDB, and IAM
 
 ## Overview
 
-This repository contains the **architecture diagrams** (in multiple formats) for a serverless REST API project. The diagrams illustrate how different AWS services integrate to deliver a fully managed, scalable, and event-driven application without server management.
-
-
+This repository contains **architecture diagrams** (in multiple formats) for a serverless web application.
+The design integrates multiple AWS services to deliver a **secure, scalable, and event-driven application** that supports full CRUD operations with role-based access control.
 
 ---
 
 ## Architecture Description
 
-The architecture demonstrates how to build a **Serverless REST API** using AWS services. It is designed to manage simple records (like a to-do list or customer data) and supports full CRUD (Create, Read, Update, Delete) functionality.
+The architecture demonstrates how to build a **Serverless REST API** with a web front-end, backed by DynamoDB.
+It supports CRUD functionality, secure IAM-based access, and centralized monitoring with CloudWatch.
 
 ![AWS Architecture](All%20Formats/AWS%20Arch.png)
 
@@ -18,68 +18,92 @@ The architecture demonstrates how to build a **Serverless REST API** using AWS s
 
 1. **Amazon API Gateway**
 
-   * Exposes RESTful endpoints to clients.
-   * Routes incoming HTTP requests to AWS Lambda functions.
+   * Exposes RESTful endpoints for the backend API.
+   * Routes CRUD API requests from end users to AWS Lambda functions.
 
 2. **AWS Lambda**
 
-   * Stateless compute functions.
-   * Each function handles CRUD logic for the API.
-   * Connects with DynamoDB for persistent storage.
+   * Stateless compute functions implementing business logic.
+   * Four key functions handle CRUD operations:
+
+     * **Create Function**
+     * **Read Function**
+     * **Update Function**
+     * **Delete Function**
+   * Each function interacts with DynamoDB for persistence.
 
 3. **Amazon DynamoDB**
 
-   * NoSQL database to store application records.
-   * Scalable, serverless, and integrates seamlessly with Lambda.
+   * NoSQL database storing application records.
+   * Provides highly available, fully managed storage.
+   * Integrated with Lambda and logs monitored in CloudWatch.
 
 4. **Amazon S3**
 
-   * Hosts the front-end web application.
-   * Serves static assets directly to end users.
+   * Stores and serves front-end static files.
+   * Provides origin for the CloudFront distribution.
 
-5. **Amazon CloudFront** *(optional, as shown in the diagram)*
+5. **Amazon CloudFront**
 
-   * Content Delivery Network (CDN) for global distribution of the front-end.
-   * Improves performance and availability.
+   * Content Delivery Network (CDN) serving the front-end globally.
+   * Improves performance, caching, and availability of static assets.
 
 6. **AWS IAM**
 
-   * Provides fine-grained access control between services (API Gateway → Lambda → DynamoDB).
-   * Ensures secure API access through roles and permissions.
+   * IAM Users and Roles are managed by the System Admin.
+   * IAM Role controls **API Gateway → Lambda → DynamoDB** access.
+   * Specific role grants **Read & Edit** permissions on DynamoDB.
 
 7. **Amazon CloudWatch**
 
-   * Centralized logging and monitoring.
-   * Collects logs from API Gateway, Lambda, and DynamoDB for observability.
+   * Collects and aggregates logs from:
+
+     * CloudFront
+     * API Gateway
+     * Lambda Functions
+     * DynamoDB
+   * Provides monitoring and observability.
 
 ---
 
 ## Data Flow
 
-1. End user sends a request to the **API Gateway** endpoint.
-2. API Gateway forwards the request to the appropriate **Lambda function**.
-3. Lambda function processes the logic (CRUD) and interacts with **DynamoDB**.
-4. Response is sent back through API Gateway to the client.
-5. Logs and metrics are stored in **CloudWatch** for monitoring.
-6. Front-end (hosted on **S3/CloudFront**) communicates with the API Gateway.
+1. **End Users**
+
+   * Access front-end files from **CloudFront** (originating from S3).
+   * Send API CRUD requests through **API Gateway**.
+
+2. **API Requests**
+
+   * API Gateway invokes the correct **Lambda function** (Create, Read, Update, Delete).
+   * Lambda executes logic and interacts with **DynamoDB** for storage.
+
+3. **System Admin**
+
+   * Manages **IAM Users** and assigns appropriate roles.
+   * Roles enforce access control for API and database interactions.
+
+4. **Logs and Monitoring**
+
+   * CloudFront, API Gateway, Lambda, and DynamoDB logs flow into **CloudWatch**.
+   * Enables debugging, auditing, and performance monitoring.
 
 ---
 
 ## Learning Outcomes
 
-* Understanding how to design **serverless, event-driven architectures**.
-* Using **API Gateway + Lambda** for stateless request handling.
-* Leveraging **DynamoDB** as a fully managed NoSQL database.
-* Implementing **IAM roles and policies** for secure communication.
-* Monitoring with **CloudWatch** for performance and debugging.
+* How to design a **serverless full-stack web application** using AWS.
+* Implementing CRUD APIs with **API Gateway + Lambda + DynamoDB**.
+* Hosting a front-end with **S3 + CloudFront** for global delivery.
+* Enforcing **IAM roles** for secure service-to-service communication.
+* Monitoring serverless applications using **CloudWatch logs**.
 
 ---
 
-
 ## Repository Contents
 
-This repository includes only **architecture diagrams** in multiple formats for visualization and sharing purposes.
-No source code or deployment scripts are provided.
+This repository contains only **architecture diagrams** in multiple formats.
+It does not include deployment scripts or source code.
 
 Formats available:
 
@@ -88,4 +112,4 @@ Formats available:
 * `AWS Arch.html`
 * `AWS Arch.xml`
 
-All formats represent the same architecture for easier reference across tools and platforms.
+All formats represent the same architecture for consistency across visualization tools.
